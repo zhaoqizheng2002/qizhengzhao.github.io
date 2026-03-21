@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qizheng Zhao · Health Informatics Researcher</title>
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --bg0: #030810;
+      --bg1: #070f1e;
+      --bg2: #0c1a2e;
+      --bg3: #101f38;
+      --cyan:  #00e5ff;
+      --cyan2: #00b8d9;
+      --cyan-dim: rgba(0,229,255,.12);
+      --cyan-glow: rgba(0,229,255,.25);
+      --amber: #ffb800;
+      --green: #00ff88;
+      --red:   #ff4d6d;
+      --txt0: #e6edf6;
+      --txt1: #7b93aa;
+      --txt2: #3a5266;
+      --border:  rgba(0,229,255,.12);
+      --border2: rgba(0,229,255,.35);
+      --mono: 'Courier New','Lucida Console',monospace;
+      --sans: 'Segoe UI',system-ui,-apple-system,sans-serif;
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg0);
+      color: var(--txt0);
+      font-family: var(--sans);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* Scanline texture */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,.04) 3px, rgba(0,0,0,.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9000;
+    }
+
+    /* Dot grid */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, rgba(0,229,255,.07) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    strong { color: var(--txt0); }
+
+    /* ─── Scrollbar ─────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg1); }
+    ::-webkit-scrollbar-thumb { background: var(--cyan2); }
+
+    /* ─── Nav ───────────────────────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 8000;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      background: rgba(3,8,16,.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--cyan);
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+    .nav-brand em { color: var(--txt2); font-style: normal; }
+
+    .nav-links {
+      list-style: none;
+      display: flex; gap: 36px;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--txt2);
+      transition: color .2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; left: 0; bottom: -3px;
+      width: 0; height: 1px;
+      background: var(--cyan);
+      transition: width .25s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px;
+      background: none; border: none;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 1px;
+      background: var(--txt1);
+      transition: all .3s;
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 80px 80px 60px;
+      position: relative; overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute; right: 0; top: 0;
+      width: 55%; height: 100%;
+      opacity: .35;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 720px;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards .2s;
+    }
+
+    .hero-name {
+      font-size: clamp(52px,9vw,108px);
+      font-weight: 800;
+      line-height: .95;
+      letter-spacing: -3px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards .45s;
+    }
+    .hero-name .solid { display: block; color: var(--txt0); }
+    .hero-name .outline {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--cyan);
+      filter: drop-shadow(0 0 12px rgba(0,229,255,.4));
+    }
+
+    .hero-sub {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--txt1);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards .65s;
+    }
+    .hero-sub .hl { color: var(--cyan); }
+
+    .hero-cta {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards .85s;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: 1px solid var(--border2);
+      color: var(--cyan);
+      background: var(--cyan-dim);
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background: var(--cyan-glow);
+      border-color: var(--cyan);
+      box-shadow: 0 0 22px rgba(0,229,255,.18);
+      color: #fff;
+    }
+
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px;
+      background: rgba(0,255,136,.07);
+      border: 1px solid rgba(0,255,136,.2);
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--green);
+      letter-spacing: 1px;
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeUp .7s ease forwards 1.05s;
+    }
+    .status-pill::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: blink 2s infinite;
+    }
+
+    /* ─── Section Shell ─────────────────────────────────────────── */
+    .section {
+      padding: 100px 80px;
+      position: relative; z-index: 1;
+    }
+    .section--alt { background: var(--bg1); }
+
+    .sh { margin-bottom: 60px; }
+    .sh-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 10px;
+    }
+    .sh-title {
+      font-size: clamp(26px,3.5vw,46px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    .sh-rule {
+      width: 48px; height: 2px;
+      background: var(--cyan);
+      margin-top: 14px;
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    /* ─── About ─────────────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 64px; align-items: start;
+    }
+    .about-text { color: var(--txt1); font-size: 15.5px; line-height: 1.85; }
+    .about-text p + p { margin-top: 18px; }
+
+    .stat-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .stat {
+      padding: 22px 20px;
+      border: 1px solid var(--border);
+      background: var(--bg0);
+      position: relative; overflow: hidden;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .stat::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px; background: var(--cyan);
+    }
+    .stat:hover {
+      border-color: var(--border2);
+      box-shadow: 0 0 24px rgba(0,229,255,.07);
+    }
+    .stat-n {
+      font-family: var(--mono);
+      font-size: 34px; font-weight: 700;
+      color: var(--cyan); line-height: 1;
+    }
+    .stat-l {
+      font-family: var(--mono);
+      font-size: 9px; letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--txt2); margin-top: 7px;
+    }
+
+    /* ─── Education ─────────────────────────────────────────────── */
+    .edu-timeline {
+      position: relative; padding-left: 44px;
+    }
+    .edu-timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--cyan) 0%, var(--bg2) 100%);
+    }
+    .edu-item {
+      position: relative; margin-bottom: 56px;
+      opacity: 0; transform: translateX(-18px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .edu-item.vis { opacity: 1; transform: none; }
+    .edu-item::before {
+      content: '';
+      position: absolute; left: -49px; top: 10px;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--bg0);
+      border: 2px solid var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
+    }
+    .edu-period {
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 8px;
+    }
+    .edu-school {
+      font-size: 21px; font-weight: 700;
+      color: var(--txt0); margin-bottom: 5px;
+    }
+    .edu-degree { font-size: 14.5px; color: var(--txt1); margin-bottom: 4px; }
+    .edu-detail {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--txt2); margin-bottom: 10px;
+    }
+    .tag-pill {
+      display: inline-block;
+      padding: 3px 12px;
+      border: 1px solid var(--border2);
+      color: var(--cyan);
+      font-family: var(--mono); font-size: 10px;
+    }
+
+    /* ─── Publications ──────────────────────────────────────────── */
+    .filter-bar {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .f-btn {
+      padding: 5px 15px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--txt2);
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 1px;
+      cursor: pointer; transition: all .2s;
+    }
+    .f-btn:hover, .f-btn.on {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    .pub-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .pub {
+      padding: 22px 26px;
+      border: 1px solid var(--border);
+      background: var(--bg0);
+      position: relative; overflow: hidden;
+      transition: border-color .3s, box-shadow .3s, opacity .3s, max-height .3s;
+    }
+    .pub::after {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      height: 2px; width: 0;
+      background: var(--cyan);
+      transition: width .35s ease;
+    }
+    .pub:hover::after { width: 100%; }
+    .pub:hover {
+      border-color: var(--border2);
+      box-shadow: 0 0 32px rgba(0,229,255,.05);
+    }
+    .pub.hidden { display: none; }
+
+    .pub-top {
+      display: flex; align-items: center; gap: 8px;
+      flex-wrap: wrap; margin-bottom: 10px;
+    }
+    .pub-idx {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--txt2); min-width: 28px;
+    }
+    .badge {
+      padding: 2px 9px;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 1px; border: 1px solid;
+    }
+    .q1  { color: var(--cyan);  border-color: var(--cyan);  background: rgba(0,229,255,.08); }
+    .q2  { color: var(--amber); border-color: var(--amber); background: rgba(255,184,0,.08); }
+    .conf{ color: var(--green); border-color: var(--green); background: rgba(0,255,136,.08); }
+    .if- { color: var(--txt2);  border-color: var(--txt2);  background: transparent; }
+
+    .pub-title {
+      font-size: 14.5px; font-weight: 600;
+      color: var(--txt0); line-height: 1.45;
+      margin-bottom: 7px;
+    }
+    .pub-authors {
+      font-family: var(--mono); font-size: 11.5px;
+      color: var(--txt2); margin-bottom: 5px;
+    }
+    .pub-authors .me { color: var(--cyan); font-weight: 700; }
+    .pub-venue {
+      font-size: 12.5px; color: var(--txt2); font-style: italic;
+    }
+
+    /* ─── Research ──────────────────────────────────────────────── */
+    .r-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px,1fr));
+      gap: 20px;
+    }
+    .r-card {
+      padding: 28px 26px;
+      border: 1px solid var(--border);
+      background: var(--bg1);
+      position: relative; overflow: hidden;
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .5s ease, transform .5s ease, border-color .3s, box-shadow .3s;
+    }
+    .r-card.vis { opacity: 1; transform: none; }
+    .r-card:hover {
+      border-color: var(--border2);
+      box-shadow: 0 10px 40px rgba(0,229,255,.06);
+    }
+    .r-corner {
+      position: absolute; top: 0; right: 0;
+      width: 32px; height: 32px;
+      border-left: 1px solid rgba(0,229,255,.3);
+      border-bottom: 1px solid rgba(0,229,255,.3);
+    }
+    .r-period {
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 10px;
+    }
+    .r-title {
+      font-size: 16.5px; font-weight: 700;
+      color: var(--txt0); margin-bottom: 4px;
+    }
+    .r-group {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--txt2); margin-bottom: 14px;
+    }
+    .r-desc {
+      font-size: 13.5px; color: var(--txt1);
+      line-height: 1.7; margin-bottom: 16px;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      padding: 3px 10px;
+      background: rgba(0,229,255,.06);
+      border: 1px solid rgba(0,229,255,.15);
+      color: var(--txt2);
+      font-family: var(--mono); font-size: 9.5px;
+      letter-spacing: .5px;
+    }
+
+    /* ─── Skills ────────────────────────────────────────────────── */
+    .sk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+      gap: 18px;
+    }
+    .sk-cat {
+      padding: 22px 20px;
+      border: 1px solid var(--border);
+      background: var(--bg0);
+    }
+    .sk-cat-lbl {
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 14px;
+    }
+    .sk-items { display: flex; flex-wrap: wrap; gap: 7px; }
+    .sk {
+      padding: 5px 13px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--txt1);
+      font-family: var(--mono); font-size: 11px;
+      transition: all .2s;
+    }
+    .sk:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    /* ─── Awards ────────────────────────────────────────────────── */
+    .aw-list { display: flex; flex-direction: column; gap: 14px; }
+    .aw {
+      display: flex; align-items: flex-start; gap: 24px;
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      background: var(--bg1);
+      transition: border-color .3s;
+    }
+    .aw:hover { border-color: var(--border2); }
+    .aw-year {
+      font-family: var(--mono); font-size: 26px;
+      font-weight: 700; color: var(--cyan);
+      opacity: .4; min-width: 60px; line-height: 1;
+    }
+    .aw-body { font-size: 14.5px; color: var(--txt1); line-height: 1.5; }
+    .aw-body strong { color: var(--txt0); }
+
+    /* ─── Contact ───────────────────────────────────────────────── */
+    #contact { text-align: center; }
+    .contact-wrap { max-width: 560px; margin: 0 auto; }
+    .contact-p {
+      font-size: 15px; color: var(--txt1);
+      line-height: 1.8; margin-bottom: 44px;
+    }
+    .contact-links {
+      display: flex; justify-content: center;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .c-link {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+      padding: 20px 28px;
+      border: 1px solid var(--border);
+      color: var(--txt1);
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 2px; text-transform: uppercase;
+      transition: all .3s;
+    }
+    .c-link:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: var(--cyan-dim);
+      box-shadow: 0 0 28px rgba(0,229,255,.1);
+    }
+    .c-ico { font-size: 22px; }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      padding: 24px 80px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between;
+      align-items: center; z-index: 1; position: relative;
+    }
+    .ft {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--txt2);
+    }
+    .ft span { color: var(--cyan); }
+
+    /* ─── Animations ────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: .3; }
+    }
+
+    /* ─── Mobile ────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      #nav { padding: 0 20px; }
+      .nav-links {
+        display: none;
+        position: fixed; top: 56px; left: 0; right: 0;
+        background: rgba(3,8,16,.97);
+        flex-direction: column; padding: 24px;
+        border-bottom: 1px solid var(--border);
+        gap: 20px;
+      }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+
+      #hero { padding: 80px 24px 60px; }
+      #hero-canvas { display: none; }
+      .hero-name { letter-spacing: -2px; }
+
+      .section { padding: 60px 24px; }
+      footer { padding: 20px 24px; flex-direction: column; gap: 10px; text-align: center; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-cta { flex-direction: column; }
+    }
+
+    @media (max-width: 480px) {
+      .contact-links { flex-direction: column; align-items: stretch; }
+      .c-link { flex-direction: row; justify-content: center; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAV ═══════════════════════════════════════ -->
+<nav id="nav">
+  <div class="nav-brand">QZ<em>.research()</em></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════════════════ HERO ══════════════════════════════════════ -->
+<section id="hero" class="section" style="padding-top:80px;">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">// health informatics · AI for healthcare</div>
+    <h1 class="hero-name">
+      <span class="solid">Qizheng</span>
+      <span class="outline">Zhao</span>
+    </h1>
+    <p class="hero-sub">
+      MSc in <span class="hl">Health Informatics</span> ·
+      Karolinska Institutet &amp; Stockholm University<br>
+      Fall Risk Prediction · Multimodal Deep Learning · Epidemiology
+    </p>
+    <div class="hero-cta">
+      <a href="mailto:qizheng.zhao@stud.ki.se" class="btn">✉ Email Me</a>
+      <a href="https://orcid.org/0009-0009-4496-733X" class="btn" target="_blank" rel="noopener">⊕ ORCID</a>
+      <a href="http://www.linkedin.com/in/qizheng-zhao-b161b22b8" class="btn" target="_blank" rel="noopener">⟡ LinkedIn</a>
+    </div>
+    <div class="status-pill">Open to research collaborations &amp; academic discussions</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ABOUT ═════════════════════════════════════ -->
+<section id="about" class="section section--alt">
+  <div class="sh">
+    <p class="sh-label">01 // About</p>
+    <h2 class="sh-title">Research Overview</h2>
+    <div class="sh-rule"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I am a researcher working at the intersection of
+        <strong>health informatics</strong>, <strong>machine learning</strong>,
+        and <strong>epidemiology</strong>. My primary focus is building intelligent
+        systems for predictive health management — particularly fall risk assessment
+        and geriatric care — using multimodal deep learning and sensor fusion.
+      </p>
+      <p>
+        With a clinical background in preventive medicine (Sun Yat-sen University)
+        and graduate training in health informatics at Karolinska Institutet &amp;
+        Stockholm University, I bridge the gap between data-driven AI and real-world
+        clinical decision support.
+      </p>
+      <p>
+        My published work spans transformer architectures for skeleton-based fall
+        prediction, multimodal IMU-image fusion networks, global disease burden
+        analysis using GBD data, and graph neural networks for epidemiological
+        nowcasting. I have served as Principal Investigator on a nationally-funded
+        research project on gait-based risk identification.
+      </p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-n">7</div><div class="stat-l">Publications</div></div>
+      <div class="stat"><div class="stat-n">4</div><div class="stat-l">JCR Q1 Papers</div></div>
+      <div class="stat"><div class="stat-n">¥50K</div><div class="stat-l">Research Grant (PI)</div></div>
+      <div class="stat"><div class="stat-n">4+</div><div class="stat-l">Yrs Research Exp</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ EDUCATION ════════════════════════════════ -->
+<section id="education" class="section">
+  <div class="sh">
+    <p class="sh-label">02 // Education</p>
+    <h2 class="sh-title">Academic Background</h2>
+    <div class="sh-rule"></div>
+  </div>
+  <div class="edu-timeline">
+
+    <div class="edu-item" data-delay="0">
+      <p class="edu-period">Sep 2025 — Jun 2027 (Expected)</p>
+      <h3 class="edu-school">Karolinska Institutet &amp; Stockholm University</h3>
+      <p class="edu-degree">Master of Science · Health Informatics</p>
+      <p class="edu-detail">Dept. of Learning, Informatics, Management and Ethics (LIME) · Joint Programme · 120 ECTS</p>
+    </div>
+
+    <div class="edu-item" data-delay="150">
+      <p class="edu-period">Sep 2020 — Jun 2025</p>
+      <h3 class="edu-school">Sun Yat-sen University</h3>
+      <p class="edu-degree">Bachelor of Medicine · Preventive Medicine</p>
+      <p class="edu-detail">School of Public Health · Shenzhen Campus</p>
+      <span class="tag-pill">GPA 3.4 / 4.0</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ PUBLICATIONS ═════════════════════════════ -->
+<section id="publications" class="section section--alt">
+  <div class="sh">
+    <p class="sh-label">03 // Publications</p>
+    <h2 class="sh-title">Research Output</h2>
+    <div class="sh-rule"></div>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <button class="f-btn on" data-f="all">All [7]</button>
+    <button class="f-btn" data-f="neural">Neural Networks</button>
+    <button class="f-btn" data-f="ieee">IEEE</button>
+    <button class="f-btn" data-f="goh">Global Health</button>
+    <button class="f-btn" data-f="conf">Conference</button>
+    <button class="f-btn" data-f="q1">JCR Q1</button>
+    <button class="f-btn" data-f="q2">JCR Q2</button>
+    <button class="f-btn" data-f="fall">Fall Risk</button>
+  </div>
+
+  <div class="pub-list" id="pubList">
+
+    <article class="pub" data-tags="neural q1 fall">
+      <div class="pub-top">
+        <span class="pub-idx">[1]</span>
+        <span class="badge q1">JCR Q1</span>
+        <span class="badge q1">IF 6.3</span>
+        <span class="badge if-">Neural Networks · Oct 2025</span>
+      </div>
+      <p class="pub-title">MIEF-Net: Multimodal Image-Enhanced Fusion Network for Intelligent Fall Risk Prediction</p>
+      <p class="pub-authors"><span class="me">Zhao, Q.</span>, Wu, R., Chen, M., Tsui, K.L., &amp; Zhao, Y.</p>
+      <p class="pub-venue">Neural Networks, vol. 195, article 108260, Oct. 30, 2025.</p>
+    </article>
+
+    <article class="pub" data-tags="ieee q1 fall">
+      <div class="pub-top">
+        <span class="pub-idx">[2]</span>
+        <span class="badge q1">JCR Q1</span>
+        <span class="badge q1">IF 10.6</span>
+        <span class="badge if-">IEEE IoT Journal · Jun 2024</span>
+      </div>
+      <p class="pub-title">MSS-Former: Multi-Scale Skeletal Transformer for Intelligent Fall Risk Prediction in Older Adults</p>
+      <p class="pub-authors"><span class="me">Zhao, Q.</span>, Fan, X., Chen, M., et al.</p>
+      <p class="pub-venue">IEEE Internet of Things Journal, vol. 11, pp. 33040–33052, Jun. 28, 2024.</p>
+    </article>
+
+    <article class="pub" data-tags="goh q1">
+      <div class="pub-top">
+        <span class="pub-idx">[3]</span>
+        <span class="badge q1">JCR Q1</span>
+        <span class="badge q1">IF 7.66</span>
+        <span class="badge if-">Journal of Global Health · Apr 2024</span>
+      </div>
+      <p class="pub-title">Assessing and projecting the global burden of thyroid cancer, 1990–2030: Analysis of the Global Burden of Disease Study</p>
+      <p class="pub-authors"><span class="me">Zhao, Q.</span>, Chen, M., Fu, L., Yang, Y., &amp; Zhan, Y.</p>
+      <p class="pub-venue">Journal of Global Health, vol. 14, article 04090, Apr. 5, 2024.</p>
+    </article>
+
+    <article class="pub" data-tags="conf fall">
+      <div class="pub-top">
+        <span class="pub-idx">[4]</span>
+        <span class="badge conf">Conference · Poster</span>
+        <span class="badge if-">ACM BCB 2024</span>
+      </div>
+      <p class="pub-title">MIEFP-Net: A Multimodal Image-Enhanced Network for Fall Prediction Using IMU Data</p>
+      <p class="pub-authors"><span class="me">Zhao, Q.</span>, Chen, M., &amp; Zhao, Y.</p>
+      <p class="pub-venue">The 15th ACM Conference on Bioinformatics, Computational Biology, and Health Informatics (Poster)</p>
+    </article>
+
+    <article class="pub" data-tags="q2 fall">
+      <div class="pub-top">
+        <span class="pub-idx">[5]</span>
+        <span class="badge q2">JCR Q2</span>
+        <span class="badge q2">IF 4.9</span>
+        <span class="badge if-">BMC Geriatrics · Feb 2024</span>
+      </div>
+      <p class="pub-title">Identifying sensors-based parameters associated with fall risk in community-dwelling older adults: an investigation and interpretation of discriminatory parameters</p>
+      <p class="pub-authors">Wang, X., Cao, J., <span class="me">Zhao, Q.</span> et al.</p>
+      <p class="pub-venue">BMC Geriatrics, published Feb. 1, 2024.</p>
+    </article>
+
+    <article class="pub" data-tags="conf">
+      <div class="pub-top">
+        <span class="pub-idx">[6]</span>
+        <span class="badge conf">Conference</span>
+        <span class="badge if-">Springer · Aug 2024</span>
+      </div>
+      <p class="pub-title">Enhancing City-Level Influenza Nowcasting on Island Terrain with Graph Neural Networks: Spatial Feature Insights</p>
+      <p class="pub-authors">Luo, J., Wang, X., Chen, M., <span class="me">Zhao, Q.</span>, &amp; Zhao, Y.</p>
+      <p class="pub-venue">Intelligent Systems Conference (Cham: Springer Nature Switzerland, August 2024)</p>
+    </article>
+
+    <article class="pub" data-tags="ieee q2 fall">
+      <div class="pub-top">
+        <span class="pub-idx">[7]</span>
+        <span class="badge q2">JCR Q2</span>
+        <span class="badge q2">IF 4.3</span>
+        <span class="badge if-">IEEE Sensors Journal · Accepted</span>
+      </div>
+      <p class="pub-title">An advanced integrated sensor-based method for fall risk assessment in rehabilitation setting</p>
+      <p class="pub-authors">Chen, M., Zhang, L., Yu, L., Yeung, E.H.K., <span class="me">Zhao, Q.</span>, et al.</p>
+      <p class="pub-venue">IEEE Sensors Journal (Accepted, 2023 IF: 4.3)</p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ RESEARCH EXPERIENCE ══════════════════════ -->
+<section id="research" class="section">
+  <div class="sh">
+    <p class="sh-label">04 // Research</p>
+    <h2 class="sh-title">Research Experience</h2>
+    <div class="sh-rule"></div>
+  </div>
+  <div class="r-grid">
+
+    <div class="r-card" data-delay="0">
+      <div class="r-corner"></div>
+      <p class="r-period">Jul 2023 — Present</p>
+      <h3 class="r-title">Sun Yat-sen University SPH</h3>
+      <p class="r-group">Prof. Yiqiang Zhan Group · Team Member</p>
+      <p class="r-desc">Investigating epidemiological characteristics and survival outcomes of neurodegenerative diseases. Applied Mendelian randomization for causal inference in genetic epidemiology; leveraged UK Biobank and NHANES for data mining.</p>
+      <div class="tag-row">
+        <span class="chip">UK Biobank</span>
+        <span class="chip">NHANES</span>
+        <span class="chip">Mendelian Randomization</span>
+        <span class="chip">Epidemiology</span>
+      </div>
+    </div>
+
+    <div class="r-card" data-delay="100">
+      <div class="r-corner"></div>
+      <p class="r-period">Mar 2022 — Present</p>
+      <h3 class="r-title">Sun Yat-sen University SPH</h3>
+      <p class="r-group">A.P. Yang Zhao Group · PI &amp; Team Member</p>
+      <p class="r-desc">Developed predictive models for personalized health management and elderly care using ML/DL. Focus on sensor-based monitoring, early detection, and risk stratification for geriatric health — resulting in 5 publications.</p>
+      <div class="tag-row">
+        <span class="chip">PyTorch</span>
+        <span class="chip">Sensor Fusion</span>
+        <span class="chip">Fall Risk</span>
+        <span class="chip">IMU</span>
+        <span class="chip">Transformer</span>
+      </div>
+    </div>
+
+    <div class="r-card" data-delay="200">
+      <div class="r-corner"></div>
+      <p class="r-period">Dec 2022 — Dec 2023</p>
+      <h3 class="r-title">Gait Anomaly &amp; Fall Risk Prediction</h3>
+      <p class="r-group">Innovation &amp; Entrepreneurship Program 2023 · Project Leader</p>
+      <p class="r-desc">Led model development for fall risk prediction using inertial measurement devices to capture gait characteristics. Identified significant markers predictive of fall risk. Awarded highest defense rating "Excellent".</p>
+      <div class="tag-row">
+        <span class="chip">Gait Analysis</span>
+        <span class="chip">Deep Imaging</span>
+        <span class="chip">Project Lead</span>
+        <span class="chip" style="color:var(--green);border-color:var(--green)">⭐ Excellent</span>
+      </div>
+    </div>
+
+    <div class="r-card" data-delay="300">
+      <div class="r-corner"></div>
+      <p class="r-period">Dec 2021 — Nov 2022</p>
+      <h3 class="r-title">Alzheimer's Risk Prediction</h3>
+      <p class="r-group">Innovation &amp; Entrepreneurship Program 2022 · Team Member</p>
+      <p class="r-desc">Established an early AD risk prediction model via meta-analyses of modifiable risk factors; trained six ML classification models achieving high predictive accuracy. Rated "Excellent".</p>
+      <div class="tag-row">
+        <span class="chip">Alzheimer's</span>
+        <span class="chip">Meta-analysis</span>
+        <span class="chip">ML Classification</span>
+        <span class="chip" style="color:var(--green);border-color:var(--green)">⭐ Excellent</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ SKILLS ════════════════════════════════════ -->
+<section id="skills" class="section section--alt">
+  <div class="sh">
+    <p class="sh-label">05 // Skills</p>
+    <h2 class="sh-title">Technical Stack</h2>
+    <div class="sh-rule"></div>
+  </div>
+  <div class="sk-grid">
+    <div class="sk-cat">
+      <p class="sk-cat-lbl">// Languages</p>
+      <div class="sk-items">
+        <span class="sk">Python</span>
+        <span class="sk">R</span>
+      </div>
+    </div>
+    <div class="sk-cat">
+      <p class="sk-cat-lbl">// Deep Learning</p>
+      <div class="sk-items">
+        <span class="sk">PyTorch</span>
+        <span class="sk">Keras</span>
+      </div>
+    </div>
+    <div class="sk-cat">
+      <p class="sk-cat-lbl">// Statistical Software</p>
+      <div class="sk-items">
+        <span class="sk">SAS</span>
+        <span class="sk">R Stats</span>
+      </div>
+    </div>
+    <div class="sk-cat">
+      <p class="sk-cat-lbl">// Biomedical Databases</p>
+      <div class="sk-items">
+        <span class="sk">UK Biobank</span>
+        <span class="sk">NHANES</span>
+        <span class="sk">GBD</span>
+      </div>
+    </div>
+    <div class="sk-cat">
+      <p class="sk-cat-lbl">// Research Methods</p>
+      <div class="sk-items">
+        <span class="sk">Mendelian Randomization</span>
+        <span class="sk">Meta-analysis</span>
+        <span class="sk">Multimodal Fusion</span>
+      </div>
+    </div>
+    <div class="sk-cat">
+      <p class="sk-cat-lbl">// Domains</p>
+      <div class="sk-items">
+        <span class="sk">Health Informatics</span>
+        <span class="sk">Clinical AI</span>
+        <span class="sk">Epidemiology</span>
+        <span class="sk">Geriatric Care</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ AWARDS ════════════════════════════════════ -->
+<section id="awards" class="section">
+  <div class="sh">
+    <p class="sh-label">06 // Awards</p>
+    <h2 class="sh-title">Honors &amp; Funding</h2>
+    <div class="sh-rule"></div>
+  </div>
+  <div class="aw-list">
+    <div class="aw">
+      <div class="aw-year">2024</div>
+      <div class="aw-body">
+        <strong>Principal Investigator — Shenzhen Medical Research Fund (SMRF)</strong><br>
+        ¥50,000 · Real-time Risk Identification Self-Prediction Model and Intelligent Intervention System for Elderly People's Gait Based on Deep Learning · Project No. A2301041
+      </div>
+    </div>
+    <div class="aw">
+      <div class="aw-year">2023</div>
+      <div class="aw-body">
+        <strong>Second Prize · Guangdong Provincial Statistical Modeling Competition</strong><br>
+        National College Students Statistical Modeling Competition, Undergraduate Group
+      </div>
+    </div>
+    <div class="aw">
+      <div class="aw-year">2023</div>
+      <div class="aw-body">
+        <strong>Outstanding Project · Innovation &amp; Entrepreneurship Training Program</strong><br>
+        Gait Anomaly Analysis and Fall Risk Prediction Model Based on Deep Imaging and Deep Learning
+      </div>
+    </div>
+    <div class="aw">
+      <div class="aw-year">2022</div>
+      <div class="aw-body">
+        <strong>Outstanding Project · Innovation &amp; Entrepreneurship Training Program</strong><br>
+        Early Prediction and Risk Assessment Model of Alzheimer's Disease Based on Machine Learning
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CONTACT ═══════════════════════════════════ -->
+<section id="contact" class="section section--alt">
+  <div class="sh" style="text-align:center;">
+    <p class="sh-label" style="text-align:center;">07 // Contact</p>
+    <h2 class="sh-title">Get In Touch</h2>
+    <div class="sh-rule" style="margin:14px auto 0;"></div>
+  </div>
+  <div class="contact-wrap">
+    <p class="contact-p">
+      I'm open to research collaborations, academic discussions, and opportunities
+      in health informatics, clinical AI, and epidemiology. Don't hesitate to reach out.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:qizheng.zhao@stud.ki.se" class="c-link">
+        <span class="c-ico">✉</span>Email
+      </a>
+      <a href="https://orcid.org/0009-0009-4496-733X" class="c-link" target="_blank" rel="noopener">
+        <span class="c-ico">⊕</span>ORCID
+      </a>
+      <a href="http://www.linkedin.com/in/qizheng-zhao-b161b22b8" class="c-link" target="_blank" rel="noopener">
+        <span class="c-ico">⟡</span>LinkedIn
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ════════════════════════════════════ -->
+<footer>
+  <p class="ft">© 2025 Qizheng Zhao · <span>qizheng.zhao@stud.ki.se</span></p>
+  <p class="ft"><span>STATUS:</span> MSc in Progress · Open to Collaboration</p>
+</footer>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════════════════════ -->
+<script>
+/* ── Neural-network canvas ─────────────────────────────────────── */
+(function () {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx    = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const N = 45;
+  const nodes = Array.from({ length: N }, () => ({
+    x:  Math.random() * canvas.width,
+    y:  Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.28,
+    vy: (Math.random() - 0.5) * 0.28,
+    r:  Math.random() * 1.8 + 0.8,
+  }));
+
+  function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d  = Math.hypot(dx, dy);
+        if (d < 160) {
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(0,229,255,${(1 - d / 160) * 0.28})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,229,255,0.65)';
+      ctx.fill();
+
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
+      if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+    });
+
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ── Hamburger ─────────────────────────────────────────────────── */
+document.getElementById('burger').addEventListener('click', function () {
+  document.getElementById('navLinks').classList.toggle('open');
+  this.setAttribute('aria-expanded',
+    this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+});
+
+/* Close mobile nav on link click */
+document.querySelectorAll('#navLinks a').forEach(a =>
+  a.addEventListener('click', () =>
+    document.getElementById('navLinks').classList.remove('open')
+  )
+);
+
+/* ── Publication filters ────────────────────────────────────────── */
+document.getElementById('filterBar').addEventListener('click', function (e) {
+  const btn = e.target.closest('.f-btn');
+  if (!btn) return;
+
+  this.querySelectorAll('.f-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+
+  const f = btn.dataset.f;
+  document.querySelectorAll('.pub').forEach(p => {
+    const tags = p.dataset.tags || '';
+    p.classList.toggle('hidden', f !== 'all' && !tags.split(' ').includes(f));
+  });
+});
+
+/* ── Intersection Observer (scroll animations) ──────────────────── */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const delay = el.dataset.delay ? parseInt(el.dataset.delay) : 0;
+      setTimeout(() => el.classList.add('vis'), delay);
+      io.unobserve(el);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.edu-item, .r-card').forEach(el => io.observe(el));
+
+/* ── Active nav highlight on scroll ─────────────────────────────── */
+const sections = document.querySelectorAll('section[id]');
+const navAs    = document.querySelectorAll('.nav-links a');
+
+const navIO = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navAs.forEach(a => {
+        a.style.color = a.getAttribute('href') === `#${id}`
+          ? 'var(--cyan)' : '';
+      });
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(s => navIO.observe(s));
+</script>
+
+</body>
+</html>
