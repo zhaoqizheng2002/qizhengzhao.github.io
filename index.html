@@ -147,6 +147,35 @@ img { max-width: 100%; display: block; }
   grid-template-columns: 1fr 280px;
   gap: 64px; align-items: center;
 }
+/* ─── News ticker ────────────────────────────────────── */
+.hero-news {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 22px;
+  padding: 6px 14px 6px 8px;
+  border: 1px solid rgba(184,150,12,.35);
+  border-radius: 2px;
+  background: rgba(184,150,12,.06);
+  font-size: 12.5px; color: var(--slate);
+  line-height: 1.3;
+}
+.hero-news-label {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ivory); background: var(--navy);
+  padding: 3px 7px; border-radius: 1px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.hero-news-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold2);
+  animation: pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.7); }
+}
 .hero-eyebrow {
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 3px; text-transform: uppercase;
@@ -188,6 +217,113 @@ img { max-width: 100%; display: block; }
   border-color: var(--navy);
 }
 .hero-link svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+.hero-link--cv {
+  background: var(--navy); color: white;
+  border-color: var(--navy); font-weight: 600;
+}
+.hero-link--cv:hover { background: var(--navy2); border-color: var(--navy2); }
+
+/* ─── Latest Updates section ──────────────────────────── */
+.updates-band {
+  background: var(--navy);
+  padding: 0;
+  border-bottom: 2px solid var(--gold);
+}
+.updates-inner {
+  max-width: var(--max); margin: 0 auto; padding: 0 32px;
+  display: flex; align-items: stretch; min-height: 52px;
+}
+.updates-label {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); white-space: nowrap;
+  padding-right: 20px;
+  border-right: 1px solid rgba(255,255,255,.12);
+  margin-right: 0; flex-shrink: 0;
+}
+.updates-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold2);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.updates-list {
+  display: flex; align-items: center; gap: 0;
+  overflow-x: auto; scrollbar-width: none;
+  flex: 1;
+}
+.updates-list::-webkit-scrollbar { display: none; }
+.update-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 22px;
+  border-right: 1px solid rgba(255,255,255,.08);
+  white-space: nowrap; flex-shrink: 0;
+}
+.update-date {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--gold2); letter-spacing: .5px;
+}
+.update-text {
+  font-size: 12px; color: rgba(255,255,255,.75);
+}
+.update-text strong { color: white; font-weight: 600; }
+.update-tag {
+  font-family: var(--mono); font-size: 9px;
+  padding: 2px 7px; border-radius: 1px;
+  letter-spacing: .5px; flex-shrink: 0;
+}
+.update-tag--phd  { background: rgba(184,150,12,.25); color: var(--gold2); }
+.update-tag--pub  { background: rgba(26,92,56,.3); color: #6fcf97; }
+.update-tag--new  { background: rgba(255,255,255,.1); color: rgba(255,255,255,.6); }
+
+/* ─── Nav active state ────────────────────────────────── */
+.nav-links a.nav-active {
+  color: var(--navy) !important;
+  font-weight: 600 !important;
+}
+.nav-links a.nav-active::after { width: 100%; }
+
+/* ─── Research statement callout ──────────────────────── */
+.research-statement {
+  margin-bottom: 28px;
+  padding: 14px 18px;
+  background: rgba(28,43,74,.04);
+  border-left: 3px solid var(--navy);
+  border-radius: 0 2px 2px 0;
+  font-size: 14px; color: var(--slate);
+  font-style: italic; line-height: 1.7;
+}
+.research-statement strong { color: var(--navy); font-style: normal; }
+
+/* ─── Education enhancements ──────────────────────────── */
+.edu-courses {
+  margin-top: 10px;
+  font-size: 12.5px; color: var(--muted);
+  line-height: 1.7;
+}
+.edu-courses strong { color: var(--slate); font-size: 11px;
+  font-family: var(--mono); letter-spacing: .5px; text-transform: uppercase; }
+.edu-thesis {
+  margin-top: 8px; font-size: 12.5px; color: var(--slate);
+  font-style: italic; line-height: 1.6;
+}
+.edu-thesis strong { font-style: normal; font-size: 11px;
+  font-family: var(--mono); color: var(--muted); letter-spacing: .5px; text-transform: uppercase; }
+
+/* ─── Back to top ─────────────────────────────────────── */
+#back-to-top {
+  position: fixed; bottom: 28px; right: 28px; z-index: 800;
+  width: 40px; height: 40px;
+  background: var(--navy); color: white;
+  border: none; border-radius: 2px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .25s, transform .25s, background .2s;
+  box-shadow: 0 4px 16px rgba(28,43,74,.22);
+}
+#back-to-top.visible { opacity: 1; transform: translateY(0); }
+#back-to-top:hover { background: var(--navy2); }
+#back-to-top svg { width: 16px; height: 16px; fill: currentColor; }
 
 /* Avatar */
 .hero-photo-wrap {
@@ -735,10 +871,13 @@ footer {
 }
 @media (max-width: 600px) {
   .wrap { padding: 0 20px; }
-  .stats-inner { flex-wrap: wrap; gap: 24px; }
-  .stat::before { display: none; }
   .ri-img-wrap { grid-template-columns: 1fr; }
   .contact-grid { flex-direction: column; align-items: center; }
+  .updates-inner { padding: 0 20px; }
+  .updates-label { display: none; }
+  .update-item { padding: 0 14px; }
+  .hero-links { gap: 8px; }
+  #back-to-top { bottom: 20px; right: 20px; }
   .c-card { width: 200px; flex-direction: row; justify-content: center; }
   .aw { grid-template-columns: 60px 1fr; }
   footer .footer-inner { flex-direction: column; gap: 8px; text-align: center; }
@@ -774,7 +913,11 @@ footer {
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <p class="hero-eyebrow fade-1">Health Informatics · AI for Healthcare</p>
+        <div class="hero-news fade-1">
+          <span class="hero-news-label"><span class="hero-news-dot"></span>News</span>
+          Actively seeking PhD positions in Epidemiology &amp; Biostatistics — expected start 2027
+        </div>
+        <p class="hero-eyebrow fade-1">Epidemiology | Biostatistics</p>
         <h1 class="hero-name fade-2">Qizheng<br><span>Zhao</span></h1>
         <p class="hero-affil fade-3">
           <strong>MSc in Health Informatics</strong><br>
@@ -782,14 +925,26 @@ footer {
           <em style="color:var(--muted);font-size:13px;">Dept. of Learning, Informatics, Management and Ethics (LIME)</em>
         </p>
         <p class="hero-bio fade-4">
-          Researcher at the intersection of machine learning, clinical AI, and epidemiology.
-          My work focuses on intelligent systems for fall risk prediction, multimodal sensor fusion,
-          and population health analytics using large-scale biomedical databases.
+          MSc student in Health Informatics at Karolinska Institutet &amp; Stockholm University.
+          My research spans computational proteomics, Mendelian randomization, and deep learning–based
+          clinical prediction, with a current focus on CSF proteomics in Alzheimer's disease.
         </p>
         <div class="hero-links fade-5">
+          <a href="CV.pdf" class="hero-link hero-link--cv" target="_blank" rel="noopener">
+            <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/></svg>
+            Download CV
+          </a>
           <a href="mailto:qizheng.zhao@stud.ki.se" class="hero-link">
             <svg viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-            qizheng.zhao@stud.ki.se
+            Email
+          </a>
+          <a href="https://scholar.google.com/citations?hl=en&user=MmBIjzwAAAAJ" class="hero-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
+            Google Scholar
+          </a>
+          <a href="https://github.com/zhaoqizheng2002" class="hero-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
           </a>
           <a href="https://orcid.org/0009-0009-4496-733X" class="hero-link" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 01-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416zm1.444 1.303v7.434h2.297c3.272 0 3.853-2.391 3.853-3.722 0-2.175-1.031-3.712-3.984-3.712h-2.166z"/></svg>
@@ -810,14 +965,35 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════════════ STATS BAR ════════════════════════ -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat"><div class="stat-n">7</div><div class="stat-l">Publications</div></div>
-    <div class="stat"><div class="stat-n">4</div><div class="stat-l">JCR Q1 Papers</div></div>
-    <div class="stat"><div class="stat-n">¥50K</div><div class="stat-l">Research Funding (PI)</div></div>
-    <div class="stat"><div class="stat-n">4+</div><div class="stat-l">Years Research</div></div>
-    <div class="stat"><div class="stat-n">2</div><div class="stat-l">Outstanding Projects</div></div>
+
+<!-- ═══════════════════ UPDATES BAND ════════════════════ -->
+<div class="updates-band">
+  <div class="updates-inner">
+    <div class="updates-label">
+      <span class="updates-dot"></span>Latest
+    </div>
+    <div class="updates-list">
+      <div class="update-item">
+        <span class="update-date">Apr 2026</span>
+        <span class="update-text"><strong>Seeking PhD positions</strong> — Epidemiology &amp; Biostatistics, expected start 2027</span>
+        <span class="update-tag update-tag--phd">Open</span>
+      </div>
+      <div class="update-item">
+        <span class="update-date">Oct 2025</span>
+        <span class="update-text">Paper published in <strong>Neural Networks</strong> (IF 6.3) — MIEF-Net</span>
+        <span class="update-tag update-tag--pub">Publication</span>
+      </div>
+      <div class="update-item">
+        <span class="update-date">Sep 2025</span>
+        <span class="update-text">Joined <strong>Pereira Research Group</strong>, Karolinska Institutet — CSF proteomics / ADNI</span>
+        <span class="update-tag update-tag--new">RA</span>
+      </div>
+      <div class="update-item">
+        <span class="update-date">Jun 2025</span>
+        <span class="update-text">Graduated with <strong>Outstanding Thesis Award</strong> — Sun Yat-sen University</span>
+        <span class="update-tag update-tag--new">Award</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -831,41 +1007,41 @@ footer {
     </div>
     <div class="about-grid">
       <div class="about-text">
-        <p>I am a researcher working at the intersection of <strong>health informatics</strong>,
-        <strong>machine learning</strong>, and <strong>epidemiology</strong>. My primary focus is
-        on developing intelligent systems for predictive health management — particularly fall risk
-        assessment and geriatric care — through multimodal deep learning and wearable sensor fusion.</p>
-        <p>With a clinical background in preventive medicine from Sun Yat-sen University and ongoing
-        graduate training in health informatics at Karolinska Institutet &amp; Stockholm University,
-        I bridge the gap between data-driven AI and real-world clinical applications.</p>
-        <p>My published work includes transformer architectures for skeleton-based fall prediction,
-        multimodal IMU-image fusion networks, global disease burden analysis using GBD data, and
-        graph neural networks for epidemiological nowcasting. I have served as Principal Investigator
-        on a nationally-funded research project on gait-based risk identification in the elderly.</p>
+        <p class="research-statement">How can <strong>high-dimensional proteomic and genomic data</strong> be leveraged to identify early molecular signatures of neurodegeneration — and how do population-level risk factors causally shape disease trajectories?</p>
+        <p>I am a research student in Health Informatics at Karolinska Institutet &amp; Stockholm University,
+        working at the intersection of <strong>computational proteomics</strong>, <strong>genomic epidemiology</strong>, and <strong>clinical AI</strong>.
+        My current research focuses on high-throughput CSF proteomics for Alzheimer's disease biomarker
+        discovery, using the SOMAscan aptamer-based platform with data from the ADNI cohort, with a
+        particular emphasis on mitochondrial protein signatures.</p>
+        <p>With a foundation in preventive medicine and training in epidemiological methods — including
+        Mendelian randomization and GBD-based disease burden analysis — I bridge population-level
+        insights with molecular data. I also have prior experience in transformer-based fall risk
+        prediction and multimodal wearable sensor fusion, which informs my broader interest in
+        intelligent clinical decision support.</p>
+        <p>My published work includes first-author papers in <em>Neural Networks</em> (IF 6.3) and <em>IEEE Internet
+        of Things Journal</em> (IF 10.6), as well as global disease burden analyses published in the
+        <em>Journal of Global Health</em>. I have served as Principal Investigator on a nationally-funded
+        research project on gait-based risk identification in the elderly.</p>
         <div class="interests">
-          <span class="int-tag">Fall Risk Prediction</span>
-          <span class="int-tag">Multimodal Deep Learning</span>
-          <span class="int-tag">Wearable Sensors</span>
-          <span class="int-tag">Epidemiology</span>
-          <span class="int-tag">Geriatric Care</span>
-          <span class="int-tag">Health Informatics</span>
-          <span class="int-tag">Transformer Models</span>
+          <span class="int-tag">Genomic Epidemiology</span>
+          <span class="int-tag">Mendelian Randomization</span>
           <span class="int-tag">GBD Analysis</span>
+          <span class="int-tag">Deep Learning</span>
         </div>
       </div>
       <div class="about-card">
         <div class="about-card-title">Quick Info</div>
         <div class="about-card-item">
           <div class="about-card-dot"></div>
-          <div><strong>Current Position</strong><br>MSc Student, Karolinska Institutet &amp; Stockholm University</div>
+          <div><strong>Current Position</strong><br>MSc Student, Health Informatics<br>Karolinska Institutet &amp; Stockholm University</div>
         </div>
         <div class="about-card-item">
           <div class="about-card-dot"></div>
-          <div><strong>Research Groups</strong><br>Prof. Yiqiang Zhan Lab &amp; A.P. Yang Zhao Lab, SYSU</div>
+          <div><strong>Undergraduate Research (2021–2025)</strong><br>Prof. Yiqiang Zhan Lab &amp; A.P. Yang Zhao Lab, Sun Yat-sen University<br><br><strong>Graduate Research (2025–Present)</strong><br>Pereira Research Group, Karolinska Institutet<br><small style="color:var(--muted)">CSF proteomics · Mitochondrial proteins · Alzheimer's disease (SOMAscan / ADNI)</small></div>
         </div>
         <div class="about-card-item">
           <div class="about-card-dot"></div>
-          <div><strong>Clinical Background</strong><br>Preventive Medicine, School of Public Health, SYSU</div>
+          <div><strong>Background</strong><br>Preventive Medicine (BMed, Sun Yat-sen University)</div>
         </div>
         <div class="about-card-item">
           <div class="about-card-dot"></div>
@@ -873,7 +1049,7 @@ footer {
         </div>
         <div class="about-card-item">
           <div class="about-card-dot"></div>
-          <div><strong>Databases</strong><br>UK Biobank, NHANES, GBD</div>
+          <div><strong>Databases</strong><br>ADNI, UK Biobank, NHANES, GBD</div>
         </div>
       </div>
     </div>
@@ -895,6 +1071,7 @@ footer {
         <h3 class="edu-school">Karolinska Institutet &amp; Stockholm University</h3>
         <p class="edu-degree">Master of Science in Health Informatics</p>
         <p class="edu-detail">Dept. of Learning, Informatics, Management and Ethics (LIME) · Joint Master's Programme · 120 ECTS credits</p>
+        <p class="edu-courses"><strong>Key Courses</strong><br>Epidemiology &amp; Biostatistics · Health Data Science · Clinical Decision Support · Medical Informatics · Research Methods in Health Informatics</p>
       </div>
 
       <div class="edu-item" data-delay="150">
@@ -903,6 +1080,8 @@ footer {
         <p class="edu-degree">Bachelor of Medicine · Preventive Medicine</p>
         <p class="edu-detail">School of Public Health · Shenzhen Campus</p>
         <span class="edu-badge">GPA 3.4 / 4.0</span>
+        <p class="edu-thesis"><strong>Thesis</strong><br>"Gait Anomaly Detection Based on Deep Learning and Motion Sensor Technology Fusion" · <em>University-Level Outstanding Thesis Award, 2025</em></p>
+        <p class="edu-courses"><strong>Key Courses</strong><br>Epidemiology · Biostatistics · Preventive Medicine · Clinical Medicine · Medical Statistics · Toxicology · Nutrition &amp; Food Hygiene</p>
       </div>
 
     </div>
@@ -919,20 +1098,16 @@ footer {
     </div>
 
     <div class="filter-bar" id="filterBar">
-      <button class="f-btn on" data-f="all">All (7)</button>
-      <button class="f-btn" data-f="neural">Neural Networks</button>
-      <button class="f-btn" data-f="ieee">IEEE</button>
-      <button class="f-btn" data-f="goh">Global Health</button>
+      <button class="f-btn on" data-f="all">All (6)</button>
+      <button class="f-btn" data-f="first">First Author</button>
+      <button class="f-btn" data-f="journal">Journal</button>
       <button class="f-btn" data-f="conf">Conference</button>
-      <button class="f-btn" data-f="q1">JCR Q1</button>
-      <button class="f-btn" data-f="q2">JCR Q2</button>
-      <button class="f-btn" data-f="fall">Fall Risk</button>
     </div>
 
     <div class="pub-list" id="pubList">
 
       <!-- [1] Neural Networks — MIEF-Net (first author) -->
-      <div class="pub-card" data-tags="neural q1 fall">
+      <div class="pub-card" data-tags="first journal">
         <div class="pub-main">
           <div class="pub-num">1</div>
           <div class="pub-body">
@@ -956,7 +1131,7 @@ footer {
       </div>
 
       <!-- [2] IEEE IoT — MSS-Former (first author) -->
-      <div class="pub-card" data-tags="ieee q1 fall">
+      <div class="pub-card" data-tags="first journal">
         <div class="pub-main">
           <div class="pub-num">2</div>
           <div class="pub-body">
@@ -980,7 +1155,7 @@ footer {
       </div>
 
       <!-- [3] Journal of Global Health — GBD Thyroid (first author) -->
-      <div class="pub-card" data-tags="goh q1">
+      <div class="pub-card" data-tags="first journal">
         <div class="pub-main">
           <div class="pub-num">3</div>
           <div class="pub-body">
@@ -1004,7 +1179,7 @@ footer {
       </div>
 
       <!-- [4] ACM BCB — MIEFP-Net (first author) -->
-      <div class="pub-card" data-tags="conf fall">
+      <div class="pub-card" data-tags="first conf">
         <div class="pub-main">
           <div class="pub-num">4</div>
           <div class="pub-body">
@@ -1027,7 +1202,7 @@ footer {
       </div>
 
       <!-- [5] BMC Geriatrics -->
-      <div class="pub-card" data-tags="q2 fall">
+      <div class="pub-card" data-tags="journal">
         <div class="pub-main">
           <div class="pub-num">5</div>
           <div class="pub-body">
@@ -1044,21 +1219,13 @@ footer {
                 <svg viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
                 BMC Geriatrics
               </a>
-              <button class="pub-link pub-fig-toggle" data-target="fig5">
-                <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/></svg>
-                Show Figure
-              </button>
             </div>
           </div>
-        </div>
-        <div class="pub-figure" id="fig5">
-          <img src="assets/papers/mief-net/fig_imu.png" alt="IMU Sensor placement and signals" loading="lazy"/>
-          <p class="pub-fig-caption">Fig. IMU sensor placement at L4-ASIS and 6-axis signal output (AccX/Y/Z, EulerX/Y/Z) used for gait parameter extraction in community-dwelling older adults.</p>
         </div>
       </div>
 
       <!-- [6] Springer ISC -->
-      <div class="pub-card" data-tags="conf">
+      <div class="pub-card" data-tags="conf journal">
         <div class="pub-main">
           <div class="pub-num">6</div>
           <div class="pub-body">
@@ -1079,37 +1246,6 @@ footer {
         </div>
       </div>
 
-      <!-- [7] IEEE Sensors -->
-      <div class="pub-card" data-tags="ieee q2 fall">
-        <div class="pub-main">
-          <div class="pub-num">7</div>
-          <div class="pub-body">
-            <div class="pub-badges">
-              <span class="badge badge-q2">JCR Q2</span>
-              <span class="badge badge-if">IF 4.3</span>
-              <span class="badge badge-acc">Accepted</span>
-              <span class="badge badge-if">IEEE Sensors Journal</span>
-            </div>
-            <p class="pub-title">An advanced integrated sensor-based method for fall risk assessment in rehabilitation setting</p>
-            <p class="pub-authors">Chen, M., Zhang, L., Yu, L., Yeung, E.H.K., <span class="me">Zhao, Q.</span>, et al.</p>
-            <p class="pub-venue">IEEE Sensors Journal (Accepted, 2023 IF: 4.3)</p>
-            <div class="pub-actions">
-              <a href="https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=7361" class="pub-link" target="_blank" rel="noopener">
-                <svg viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
-                IEEE Sensors Journal
-              </a>
-              <button class="pub-link pub-fig-toggle" data-target="fig7">
-                <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/></svg>
-                Show Figure
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="pub-figure" id="fig7">
-          <img src="assets/papers/mief-net/fig_3mtug.png" alt="3MTUG Clinical Assessment" loading="lazy"/>
-          <p class="pub-fig-caption">Fig. 3-Metre Timed Up-and-Go (3MTUG) rehabilitation assessment protocol with integrated IMU sensors for fall risk evaluation.</p>
-        </div>
-      </div>
 
     </div><!-- /pub-list -->
   </div>
@@ -1125,10 +1261,38 @@ footer {
     </div>
     <div class="research-list">
 
+      <!-- Project 0: KI Pereira Research Group -->
+      <div class="research-item no-img" data-delay="0">
+        <div>
+          <p class="ri-period">Sep 2025 — Present</p>
+          <h3 class="ri-title">CSF Proteomics &amp; Mitochondrial Protein Analysis in Alzheimer's Disease</h3>
+          <p class="ri-group">Karolinska Institutet · Pereira Research Group</p>
+          <span class="ri-role">Research Assistant</span>
+          <p class="ri-desc">
+            Contributing to high-throughput proteomic profiling of cerebrospinal fluid (CSF) samples
+            from the ADNI cohort using the SOMAscan aptamer-based platform. Current analyses centre on
+            mitochondrial protein signatures and their associations with Alzheimer's disease progression,
+            incorporating bioinformatic pipelines for differential expression and pathway-level
+            interpretation.
+          </p>
+          <div class="ri-tags">
+            <span class="ri-tag">SOMAscan</span>
+            <span class="ri-tag">ADNI</span>
+            <span class="ri-tag">CSF Proteomics</span>
+            <span class="ri-tag">Mitochondrial Proteins</span>
+            <span class="ri-tag">Alzheimer's Disease</span>
+            <span class="ri-tag">R</span>
+            <span class="ri-tag">Bioinformatics</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin:32px 0 16px;color:var(--muted);font-size:13px;letter-spacing:.5px;font-family:var(--mono)">── Previous Research Experience ──</div>
+
       <!-- Project 1: MSS-Former / Yang Zhao Lab -->
       <div class="research-item no-img" data-delay="0">
         <div>
-          <p class="ri-period">Mar 2022 — Present</p>
+          <p class="ri-period">Mar 2022 — Jun 2025</p>
           <h3 class="ri-title">AI-Driven Fall Risk Prediction &amp; Elderly Care</h3>
           <p class="ri-group">Sun Yat-sen University School of Public Health (Shenzhen) · A.P. Yang Zhao Research Group</p>
           <span class="ri-role">PI &amp; Team Member</span>
@@ -1182,7 +1346,7 @@ footer {
       <!-- Project 3: Yiqiang Zhan Lab -->
       <div class="research-item no-img" data-delay="200">
         <div>
-          <p class="ri-period">Jul 2023 — Present</p>
+          <p class="ri-period">Jul 2023 — Jun 2025</p>
           <h3 class="ri-title">Epidemiology of Neurodegenerative &amp; Chronic Diseases</h3>
           <p class="ri-group">Sun Yat-sen University School of Public Health (Shenzhen) · Prof. Yiqiang Zhan Research Group</p>
           <span class="ri-role">Team Member</span>
@@ -1261,16 +1425,30 @@ footer {
         </div>
       </div>
       <div class="sk-row">
-        <div class="sk-row-lbl">Statistical Software</div>
+        <div class="sk-row-lbl">Bioinformatics &amp; Proteomics</div>
         <div class="sk-row-items">
+          <span class="sk-item">SOMAscan</span>
+          <span class="sk-item">limma</span>
+          <span class="sk-item">DESeq2</span>
+          <span class="sk-item">enrichR</span>
+          <span class="sk-item">GSEA</span>
+          <span class="sk-item">Pathway Analysis</span>
+        </div>
+      </div>
+      <div class="sk-row">
+        <div class="sk-row-lbl">Epidemiological Methods</div>
+        <div class="sk-row-items">
+          <span class="sk-item">Mendelian Randomization</span>
+          <span class="sk-item">GBD Analysis</span>
+          <span class="sk-item">Survival Analysis</span>
           <span class="sk-item">SAS</span>
-          <span class="sk-item">R Stats</span>
           <span class="sk-item">SPSS</span>
         </div>
       </div>
       <div class="sk-row">
         <div class="sk-row-lbl">Biomedical Databases</div>
         <div class="sk-row-items">
+          <span class="sk-item">ADNI</span>
           <span class="sk-item">UK Biobank</span>
           <span class="sk-item">NHANES</span>
           <span class="sk-item">GBD</span>
@@ -1289,6 +1467,13 @@ footer {
       <div class="sh-rule"></div>
     </div>
     <div class="aw-list">
+      <div class="aw">
+        <div class="aw-year">2025</div>
+        <div class="aw-body">
+          <strong>Outstanding Undergraduate Thesis · Sun Yat-sen University (University-Level)</strong>
+          "Gait Anomaly Detection Based on Deep Learning and Motion Sensor Technology Fusion" · School of Public Health (Shenzhen) · Supervisor: A.P. Yang Zhao · Certificate No. 2025248
+        </div>
+      </div>
       <div class="aw">
         <div class="aw-year">2024</div>
         <div class="aw-body">
@@ -1331,8 +1516,10 @@ footer {
     </div>
     <div class="contact-inner">
       <p class="contact-p">
-        I am open to research collaborations, academic discussions, and opportunities
-        in health informatics, clinical AI, and population health. Please don't hesitate to reach out.
+        I am open to research collaborations and academic discussions across health informatics,
+        epidemiology, and computational biology. I am actively seeking PhD positions,
+        particularly in epidemiology and biostatistics, with an expected start in 2027.
+        Please don't hesitate to reach out.
       </p>
       <div class="contact-grid">
         <a href="mailto:qizheng.zhao@stud.ki.se" class="c-card">
@@ -1352,10 +1539,15 @@ footer {
   </div>
 </section>
 
+<!-- ═══════════════════ BACK TO TOP ══════════════════════ -->
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+</button>
+
 <!-- ═══════════════════ FOOTER ════════════════════════════ -->
 <footer>
   <div class="footer-inner">
-    <p class="ft">© 2025 <span>Qizheng Zhao</span> · Karolinska Institutet &amp; Stockholm University</p>
+    <p class="ft">© 2026 <span>Qizheng Zhao</span> · Karolinska Institutet &amp; Stockholm University</p>
     <p class="ft"><span>qizheng.zhao@stud.ki.se</span></p>
   </div>
 </footer>
@@ -1470,18 +1662,26 @@ document.querySelectorAll('.edu-item, .research-item').forEach(el => io.observe(
 /* ── Active nav on scroll ───────────────────────────────── */
 const sections = document.querySelectorAll('section[id]');
 const navAs    = document.querySelectorAll('.nav-links a');
-const secIO = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    const id = e.target.id;
-    navAs.forEach(a => {
-      const active = a.getAttribute('href') === `#${id}`;
-      a.style.color  = active ? 'var(--navy)' : '';
-      a.style.fontWeight = active ? '600' : '';
-    });
+
+function setActiveNav() {
+  const scrollY = window.scrollY + 80;
+  let current = '';
+  sections.forEach(s => {
+    if (s.offsetTop <= scrollY) current = s.id;
   });
-}, { threshold: 0.45 });
-sections.forEach(s => secIO.observe(s));
+  navAs.forEach(a => {
+    const active = a.getAttribute('href') === `#${current}`;
+    a.classList.toggle('nav-active', active);
+  });
+}
+window.addEventListener('scroll', setActiveNav, { passive: true });
+setActiveNav();
+
+/* ── Back to top ────────────────────────────────────────── */
+const btt = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  btt.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
 
 /* ═══════════════════════════════════════════════════════════
    DRAWER SYSTEM
